@@ -1,8 +1,9 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToMany } from 'typeorm';
 import { GroupMember } from '../groups/group-member.entity';
 import { Expense } from '../expenses/expense.entity';
 import { ExpenseSplit } from '../expenses/expense-split.entity';
 import { Settlement } from '../settlements/settlement.entity';
+import { Group } from 'src/groups/group.entity';
 
 @Entity()
 export class User {
@@ -17,6 +18,9 @@ export class User {
 
   @Column()
   password: string;
+
+  @ManyToMany(() => Group, (group) => group.members)
+  groups: Group[];
 
   @OneToMany(() => GroupMember, (gm) => gm.user)
   groupMemberships: GroupMember[];
