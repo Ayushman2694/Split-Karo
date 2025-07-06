@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 import { User } from './user.entity';
 
 @Injectable()
@@ -66,5 +66,11 @@ export class UsersService {
     });
 
     return Array.from(groupMap.values());
+  }
+  async findAllExcept(loggedInUserId: string) {
+    return await this.userRepo.find({
+      where: { id: Not(loggedInUserId) },
+      select: ['id', 'name', 'email'],
+    });
   }
 }

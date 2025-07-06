@@ -17,4 +17,10 @@ export class UsersController {
   getMyGroups(@Req() req) {
     return this.usersService.getUserGroups(req.user.userId);
   }
+  @UseGuards(JwtAuthGuard)
+  @Get('all')
+  getAllExceptMe(@Req() req) {
+    const loggedInUserId = req.user.userId;
+    return this.usersService.findAllExcept(loggedInUserId);
+  }
 }
