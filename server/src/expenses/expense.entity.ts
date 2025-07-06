@@ -4,7 +4,7 @@ import {
   Column,
   ManyToOne,
   OneToMany,
-  CreateDateColumn,
+  CreateDateColumn
 } from 'typeorm';
 import { User } from '../users/user.entity';
 import { Group } from '../groups/group.entity';
@@ -24,7 +24,8 @@ export class Expense {
   splitType: SplitType;
 
   @ManyToOne(() => User, (u) => u.expensesPaid) paidBy: User;
-  @ManyToOne(() => Group, (g) => g.expenses) group: Group;
+  @ManyToOne(() => Group, (group) => group.expenses, { eager: true })
+  group: Group;
   @OneToMany(() => ExpenseSplit, (s) => s.expense, { cascade: true })
   splits: ExpenseSplit[];
   @CreateDateColumn() createdAt: Date;

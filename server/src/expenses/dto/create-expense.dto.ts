@@ -1,14 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
-import { IsUUID, IsString, IsNumber, ValidateNested, ArrayNotEmpty } from 'class-validator';
-import { Type } from 'class-transformer';
-import { SplitType } from '../expense.entity';
-
-class SplitDto {
-  @IsUUID()
-  userId: string;
-  @IsNumber()
-  amount: number;
-}
+import { IsUUID, IsString, IsNumber } from 'class-validator';
 
 export class CreateExpenseDto {
   @IsString()
@@ -17,10 +8,6 @@ export class CreateExpenseDto {
   amount: number;
   @IsUUID()
   groupId: string;
-  @IsString()
-  splitType: SplitType;
-  @ArrayNotEmpty()
-  @ValidateNested({ each: true })
-  @Type(() => SplitDto)
-  splits: SplitDto[];
+  @IsUUID()
+  paidBy: string;
 }

@@ -1,15 +1,19 @@
-import { Entity, PrimaryGeneratedColumn, ManyToOne, Column } from 'typeorm';
+// expense-split.entity.ts
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { User } from 'src/users/user.entity';
 import { Expense } from './expense.entity';
-import { User } from '../users/user.entity';
 
 @Entity()
 export class ExpenseSplit {
-  @PrimaryGeneratedColumn('uuid') id: string;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-  @ManyToOne(() => Expense, (e) => e.splits, { onDelete: 'CASCADE' })
-  expense: Expense;
-  @ManyToOne(() => User, (u) => u.splits, { onDelete: 'CASCADE' })
+  @ManyToOne(() => User, (user) => user.splits)
   user: User;
 
-  @Column('decimal') amountOwed: number;
+  @ManyToOne(() => Expense, (expense) => expense.splits)
+  expense: Expense;
+
+  @Column('decimal')
+  amount: number;
 }

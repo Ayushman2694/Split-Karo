@@ -52,29 +52,50 @@ export class GroupService {
       relations: ['from', 'to'],
     });
 
-    const balances: Record<string, number> = {};
+    const balances: Record<string, { name: string; balance: number }> = {};
 
     // 1. Process all expenses
     for (const expense of group.expenses) {
-      const payerId = expense.paidBy.id;
-      balances[payerId] = (balances[payerId] || 0) + Number(expense.amount);
+      const payer = expense.paidBy;
+      const payerId = payer.id;
+
+      if (!balances[payerId]) {
+        balances[payerId] = { name: payer.name, balance: 0 };
+      }
+      balances[payerId].balance += Number(expense.amount);
 
       for (const split of expense.splits) {
-        const userId = split.user.id;
-        balances[userId] = (balances[userId] || 0) - Number(split.amountOwed);
+        const user = split.user;
+        const userId = user.id;
+
+        if (!balances[userId]) {
+          balances[userId] = { name: user.name, balance: 0 };
+        }
+        balances[userId].balance -= Number(split.amount);
       }
     }
 
     // 2. Apply settlements (reduce balances)
     for (const s of settlements) {
-      const from = s.from.id;
-      const to = s.to.id;
+      const fromId = s.from.id;
+      const toId = s.to.id;
       const amt = Number(s.amount);
 
-      balances[from] -= amt;
-      balances[to] += amt;
-    }
+      if (!balances[fromId]) {
+        balances[fromId] = { name: s.from.name, balance: 0 };
+      }
+      if (!balances[toId]) {
+        balances[toId] = { name: s.to.name, balance: 0 };
+      }
 
-    return balances;
+      balances[fromId].balance += amt;
+      balances[toId].balance -= amt;
+    }
+    const response = Object.entries(balances).map(([userId, data]) => ({
+      userId,
+      name: data.name,
+      balance: data.balance,
+    }));
+    return response;
   }
 }
