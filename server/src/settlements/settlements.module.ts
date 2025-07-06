@@ -1,7 +1,13 @@
 import { Module } from '@nestjs/common';
-import { SettlementsController } from './settlements.controller';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Settlement } from './settlement.entity';
+import { SettlementService } from './settlement.service';
+import { SettlementController } from './settlements.controller';
+import { UserModule } from '../users/users.module';
 
 @Module({
-  controllers: [SettlementsController],
+  imports: [TypeOrmModule.forFeature([Settlement]), UserModule],
+  providers: [SettlementService],
+  controllers: [SettlementController],
 })
-export class SettlementsModule {}
+export class SettlementModule {}

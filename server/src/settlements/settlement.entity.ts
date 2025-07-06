@@ -1,29 +1,15 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  ManyToOne,
-  Column,
-  CreateDateColumn,
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, ManyToOne, Column, CreateDateColumn } from 'typeorm';
 import { User } from '../users/user.entity';
 
 @Entity()
 export class Settlement {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryGeneratedColumn('uuid') id: string;
 
-  @ManyToOne(() => User, (user) => user.settlementsSent)
-  from: User;
+  @ManyToOne(() => User, (u) => u.settlementsSent) from: User;
+  @ManyToOne(() => User, (u) => u.settlementsReceived) to: User;
 
-  @ManyToOne(() => User, (user) => user.settlementsReceived)
-  to: User;
+  @Column('decimal') amount: number;
+  @Column() groupId: string;
 
-  @Column('decimal')
-  amount: number;
-
-  @Column()
-  groupId: string;
-
-  @CreateDateColumn()
-  settledAt: Date;
+  @CreateDateColumn() settledAt: Date;
 }

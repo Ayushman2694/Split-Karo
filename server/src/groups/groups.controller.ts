@@ -27,4 +27,9 @@ export class GroupController {
   findOne(@Param('id') id: string) {
     return this.svc.findOne(id);
   }
+
+  @Get(':id/balances')
+  getGroupBalances(@Param('id') id: string) {
+    return this.svc.calculateBalances(id);
+  }
 }
